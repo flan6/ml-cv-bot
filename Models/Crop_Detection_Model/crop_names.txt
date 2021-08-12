@@ -1,0 +1,8 @@
+bean
+cabbage
+carrot
+corn
+potato
+pumpkin
+turnip
+wheat
