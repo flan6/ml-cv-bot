@@ -1,23 +1,23 @@
-import cv2
-import numpy as np
 from threading import Thread, Lock
 
+import cv2
+import numpy as np
 from numpy.core.fromnumeric import size
 
 class Detection:
-    
+
     # threading properties
     stopped = True
     lock = None
     rectangles = []
-    
+
     # properties
     screenshot = None
     net = None
     colors = None
     class_names = None
     confThreshold = 0.8
-   
+
     def __init__(self):
         # create a thread lock object
         self.lock = Lock()
@@ -31,19 +31,19 @@ class Detection:
         self.lock.acquire()
         self.screenshot = screenshot
         self.lock.release()
-    
+
     def start(self):
         self.stopped = False
         t = Thread(target=self.run)
         t.start()
-    
+
     def stop(self):
         self.stopped = True
 
     def run(self):
         # TODO: you can write your own time/iterations calculation to determine how fast this is
         while not self.stopped:
-            if not self.screenshot is None:
+            if self.screenshot is not None:
                 # do object detection on screenshot
                 classes, confidences, boxes = self.net.detect(self.screenshot, self.confThreshold, nmsThreshold=0.4)
 
@@ -51,4 +51,3 @@ class Detection:
                 self.lock.acquire()
                 self.rectangles = classes, confidences, boxes #rectangles[0] = classes, rectangles[1] = confidences, rectangles[2] = boxes
                 self.lock.release()
-    

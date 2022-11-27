@@ -1,12 +1,11 @@
 import cv2
 import numpy as np
 
+
 class Vision:
 
     class_names = None
     colors = None
-
-
 
     def __init__(self):
         # reading class names
@@ -34,12 +33,11 @@ class Vision:
     # given a list of [x, y, w, h] rectangles and a canvas image to draw on, return an image with
     # all of those rectangles drawn
     def draw_rectangles(self, frame, rectangles):
-       
         '''
         # these colors are actually BGR
         line_color = (0, 255, 0)
         line_type = cv.LINE_4
-        
+
         for (x, y, w, h) in rectangles:
             # determine the box positions
             top_left = (x, y)
@@ -48,23 +46,24 @@ class Vision:
             cv.rectangle(haystack_img, top_left, bottom_right, line_color, lineType=line_type)
         '''
         classes, confidences, boxes = rectangles
-        for classID, confidence, box in zip(classes.flatten(), confidences.flatten(), boxes):
-    
-            # get corresponding class color and name
-            color = self.colors[int(classID)]
-            class_name = self.class_names[int(classID)]
-            
-            # confidence percentage to display
-            final_confidence = '%.2f' % confidence
+        if len(classes) > 0 and len(confidences) > 0:
+            for classID, confidence, box in zip(classes.flatten(), confidences.flatten(), boxes):
+                # get corresponding class color and name
+                color = self.colors[int(classID)]
+                class_name = self.class_names[int(classID)]
 
-            label = str(class_name + final_confidence)
+                # confidence percentage to display
+                final_confidence = '%.2f' % confidence
 
-            labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
-            left, top, widht, height = box
-            top = max(top, labelSize[1])
-            cv2.rectangle(frame, box, color, thickness=3)
-            cv2.rectangle(frame, (left, top - labelSize[1]), (left + labelSize[0], top + baseLine), (255, 255, 255), cv2.FILLED)
-            cv2.putText(frame, label, (left, top), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
+                label = str(class_name + final_confidence)
+
+                labelSize, baseLine = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)
+                left, top, widht, height = box
+                top = max(top, labelSize[1])
+                cv2.rectangle(frame, box, color, thickness=3)
+                cv2.rectangle(frame, (left, top - labelSize[1]), (left +
+                              labelSize[0], top + baseLine), (255, 255, 255), cv2.FILLED)
+                cv2.putText(frame, label, (left, top), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0))
 
         return frame
 
@@ -88,6 +87,7 @@ class Vision:
         sum_y = np.sum(point_list[:, 1])
         return [np.floor_divide(sum_x, length), np.floor_divide(sum_y, length)]
 
+
 '''
 # reading class names
 with open('Models/Crop_Detection_Model/crop_names.txt', 'r') as f:
@@ -98,11 +98,11 @@ self.colors = np.random.uniform(0, 255, size=(len(self.class_names), 3))
 
 # draw boxes, class names and confidence on each detection
 for classID, confidence, box in zip(classes.flatten(), confidences.flatten(), boxes):
-    
+
     #get corresponding class color and name
     color = colors[int(classID)]
     class_name = class_names[int(classID)]
-    
+
     #confidence percentage to display
     final_confidence = '%.2f' % confidence
 
@@ -123,5 +123,5 @@ cv2.imwrite('test.png', frame)
 key = cv2.waitKey(0)
 if key == 'q':
     cv2.destroyAllWindows()
-    
+
 '''
